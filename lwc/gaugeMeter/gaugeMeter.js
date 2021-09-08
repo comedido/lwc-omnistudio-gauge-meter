@@ -15,6 +15,8 @@ import { loadScript } from 'lightning/platformResourceLoader';
 
 export default class GaugeMeter extends OmniscriptBaseMixin(LightningElement) {
 
+    loaded = false;
+
     @track
     gaugevalue_data;
     @track
@@ -130,7 +132,11 @@ export default class GaugeMeter extends OmniscriptBaseMixin(LightningElement) {
 
     }
 
+    //-- LIFECYCLE HOOKS
     renderedCallback() {
+
+        if (this.loaded)
+            return
         
         let gaugejs = "/resource/gauge"; //http://bernii.github.io/gauge.js/#!
 
@@ -139,6 +145,7 @@ export default class GaugeMeter extends OmniscriptBaseMixin(LightningElement) {
             loadScript(this, gaugejs),
         ])
         .then(() => {
+            this.loaded = true;
             this.drawChart();
         })
         .catch(error => {
@@ -147,6 +154,7 @@ export default class GaugeMeter extends OmniscriptBaseMixin(LightningElement) {
 
     }
 
+    //-- FUNCTIONS
     drawChart() {
         
         var opts = {
